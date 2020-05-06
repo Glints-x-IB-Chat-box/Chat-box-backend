@@ -1,7 +1,8 @@
 const User = require("../models/Users");
 const Bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const privateKey = "iniprivatekey";
+require("dotenv").config();
+const privateKey = process.env.PRIVATE_KEY;
 module.exports = {
   register: function (req, res, next) {
     User.create({
