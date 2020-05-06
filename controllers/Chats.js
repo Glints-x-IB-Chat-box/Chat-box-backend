@@ -10,7 +10,8 @@ module.exports = ({
     postChat: (req, res) => {
         const chat = new Chat({
             message: req.body.message,
-            imageUrl: req.file && req.file.path
+            imageUrl: req.file && req.file.path,
+            status: req.body.status
         })
         chat
         .save()
