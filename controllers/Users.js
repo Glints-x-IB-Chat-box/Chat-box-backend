@@ -6,6 +6,8 @@ module.exports = {
   register: function (req, res, next) {
     User.create({
       email: req.body.email,
+      username: req.body.username,
+      phoneNumber: req.body.phoneNumber,
       password: req.body.password,
     })
       .then((response) => res.json(response))

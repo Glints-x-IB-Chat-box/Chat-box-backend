@@ -5,7 +5,7 @@ const multer = require('multer')
 
 const storage = multer.diskStorage({
     destinantion:(req, file, cb) => {
-        cb(null, './public/chatImage')
+        cb(null, './public/chatImage/')
     },
     filename: (req, file, cb) => {
         cb(null, new Date().toISOString() + '-' + file.originalname)
@@ -24,7 +24,7 @@ const upload = multer({storage:storage, limits:{
     fileFilter: fileFilter
 })
 router.get('/getchat', ChatController.getChat)
-router.post('/postchat', upload.array('imageUrl', 10),ChatController.postChat)
+router.post('/postchat', upload.single('imageUrl'),ChatController.postChat)
 router.delete('/deletechat/:chatId', ChatController.deleteChat)
 
 module.exports = router
