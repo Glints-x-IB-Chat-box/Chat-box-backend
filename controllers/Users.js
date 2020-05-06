@@ -16,8 +16,92 @@ module.exports = {
       });
   },
 
-  authenticated: function (req, res, next) {
+  // authenticated: function (req, res, next) {
+  //   User.findOne({ username: req.body.username || { email: req.body.email } })
+  //     .then((response, err) => {
+  //       if (err) next(err);
+  //       else {
+  //         if (
+  //           response != null &&
+  //           Bcrypt.compareSync(req.body.password, response.password)
+  //         ) {
+  //           jwt.sign(
+  //             {
+  //               id: response._id,
+  //             },
+  //             privateKey,
+  //             { expiresIn: 60 * 60 },
+  //             (err, token) => {
+  //               res.json(token);
+  //             }
+  //           );
+  //         } else {
+  //           res.json({ status: err });
+  //         }
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       throw err;
+  //     });
+  // },
+  emailAuthenticated: function (req, res, next) {
     User.findOne({ email: req.body.email })
+      .then((response, err) => {
+        if (err) next(err);
+        else {
+          if (
+            response != null &&
+            Bcrypt.compareSync(req.body.password, response.password)
+          ) {
+            jwt.sign(
+              {
+                id: response._id,
+              },
+              privateKey,
+              { expiresIn: 60 * 60 },
+              (err, token) => {
+                res.json(token);
+              }
+            );
+          } else {
+            res.json({ status: err });
+          }
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  },
+  usernameAuthenticated: function (req, res, next) {
+    User.findOne({ username: req.body.username })
+      .then((response, err) => {
+        if (err) next(err);
+        else {
+          if (
+            response != null &&
+            Bcrypt.compareSync(req.body.password, response.password)
+          ) {
+            jwt.sign(
+              {
+                id: response._id,
+              },
+              privateKey,
+              { expiresIn: 60 * 60 },
+              (err, token) => {
+                res.json(token);
+              }
+            );
+          } else {
+            res.json({ status: err });
+          }
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  },
+  phoneNumberAuthenticated: function (req, res, next) {
+    User.findOne({ phoneNumber: req.body.phoneNumber })
       .then((response, err) => {
         if (err) next(err);
         else {
@@ -59,6 +143,16 @@ module.exports = {
   },
   deleteById: (req, res) => {
     User.findByIdAndRemove(req.params.usersId)
+      .then((result) => res.json(result))
+      .catch((err) => res.json(err));
+  },
+  editById: (req, res) => {
+    User.findByIdAndUpdate(req.params.usersId, {
+      username: req.body.username,
+      password: req.body.password,
+      about: req.body.about,
+      imageUrl: req.file && req.file.path,
+    })
       .then((result) => res.json(result))
       .catch((err) => res.json(err));
   },

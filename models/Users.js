@@ -10,13 +10,15 @@ const userSchema = new Schema({
   },
   email: {
     type: String,
-    required:true
+    required: true,
   },
   imageUrl: {
     type: String,
+    default: false,
   },
   about: {
     type: String,
+    default: "Hi, I'm using Chat Boxos",
   },
   phoneNumber: {
     type: Number,
