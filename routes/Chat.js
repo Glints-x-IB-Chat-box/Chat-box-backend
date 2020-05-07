@@ -24,7 +24,8 @@ const upload = multer({storage:storage, limits:{
     fileFilter: fileFilter
 })
 router.get('/getchat', ChatController.getChat)
-router.post('/postchat', upload.array('imageUrl', 10),ChatController.postChat)
+router.post('/postchat', upload.array('image', 10),ChatController.postChat)
+router.post('/postchat/:chatId', upload.array('image', 10),ChatController.postChat)
 router.delete('/deletechat/:chatId', ChatController.deleteChat)
 
 module.exports = router

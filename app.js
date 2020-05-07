@@ -10,8 +10,10 @@ const jwt = require("jsonwebtoken");
 const privateKey = "iniprivatekey";
 
 mongoose.connect(
-  "mongodb://localhost/chat",
-  { useNewUrlParser: true, useUnifiedTopology: true },
+  "mongodb://localhost/chatbox", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  },
   () => console.log("mongodb connected")
 );
 
@@ -23,9 +25,13 @@ var app = express();
 app.use(cors());
 app.use(logger("dev"));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 

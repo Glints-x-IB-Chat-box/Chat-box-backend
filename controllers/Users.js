@@ -3,8 +3,11 @@ const Bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const privateKey = "iniprivatekey";
 module.exports = {
-  register: function (req, res, next) {
+  register: function (req, res) {
     User.create({
+      name: req.body.name,
+      username: req.body.username,
+      mobile: req.body.mobile,
       email: req.body.email,
       password: req.body.password,
     })
@@ -43,7 +46,7 @@ module.exports = {
       });
   },
 
-  getAllData: (req, res, next) => {
+  getAllData: (req, res) => {
     User.find({})
       .then((result) => {
         res.json({ status: "200", data: result });
