@@ -4,8 +4,11 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const privateKey = process.env.PRIVATE_KEY;
 module.exports = {
-  register: function (req, res, next) {
+  register: function (req, res) {
     User.create({
+      name: req.body.name,
+      username: req.body.username,
+      mobile: req.body.mobile,
       email: req.body.email,
       username: req.body.username,
       phoneNumber: req.body.phoneNumber,
@@ -130,7 +133,7 @@ module.exports = {
       });
   },
 
-  getAllData: (req, res, next) => {
+  getAllData: (req, res) => {
     User.find({})
       .then((result) => {
         res.json({ status: "200", data: result });
