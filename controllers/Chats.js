@@ -65,8 +65,7 @@ module.exports = ({
                 new: true //result return is updated value
             }
         )
-        .then(response => res.status(200).json(response))
-        .catch(err => res.status(500).json(err))
+
     },
     deleteChat: (req, res) => {
         Chat.findByIdAndRemove({_id: req.params.chatId})

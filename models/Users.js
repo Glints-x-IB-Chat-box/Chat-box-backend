@@ -15,18 +15,27 @@ const contactSchema = new Schema({
   }
 })
 const userSchema = new Schema({
-  name: String,
   username: {
     type: String,
     required: true,
   },
-  image: String,
-  about: String,
-  mobile: {
+
+  email: {
     type: String,
     required: true,
   },
-  email: String,
+  image: {
+    type: String,
+    default: false,
+  },
+  about: {
+    type: String,
+    default: "Hi, I'm using Chat Boxos",
+  },
+  phoneNumber: {
+    type: String,
+    required: true,
+  },
   password: {
     type: String,
     required: true,
