@@ -15,9 +15,7 @@ const upload = multer({
   storage: storage,
 });
 router.post("/register", userController.register);
-router.post("/loginemail", userController.emailAuthenticated);
-router.post("/loginusername", userController.usernameAuthenticated);
-router.post("/loginphonenumber", userController.phoneNumberAuthenticated);
+router.post("/login", userController.authenticated);
 router.get("/get", userController.getAllData);
 router.get("/get/:usersId", userController.getDataById);
 router.delete("/delete/:usersId", userController.deleteById);
