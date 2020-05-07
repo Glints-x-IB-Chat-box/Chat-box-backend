@@ -5,12 +5,12 @@ const bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const mongoose = require("mongoose");
-
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const privateKey = "iniprivatekey";
-
+const privateKey = process.env.PRIVATE_KEY;
+mongodConnect = process.env.DB_CONNECTION;
 mongoose.connect(
-  "mongodb://localhost/chat",
+  mongodConnect,
   { useNewUrlParser: true, useUnifiedTopology: true },
   () => console.log("mongodb connected")
 );
@@ -23,16 +23,20 @@ var app = express();
 app.use(cors());
 app.use(logger("dev"));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use('/public/chatImage', express.static('public'))
+app.use("/public/chatImage", express.static("public"));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-app.use("/chat",  ChatRouter);
+app.use("/chat", validateUser, ChatRouter);
 
 function validateUser(req, res, next) {
   jwt.verify(req.headers["x-access-token"], privateKey, (err, decoded) => {
