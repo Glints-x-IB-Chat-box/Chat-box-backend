@@ -6,9 +6,7 @@ const privateKey = process.env.PRIVATE_KEY;
 module.exports = {
   register: function (req, res) {
     User.create({
-      name: req.body.name,
       username: req.body.username,
-      mobile: req.body.mobile,
       email: req.body.email,
       username: req.body.username,
       phoneNumber: req.body.phoneNumber,
@@ -155,7 +153,7 @@ module.exports = {
       username: req.body.username,
       password: req.body.password,
       about: req.body.about,
-      imageUrl: req.file && req.file.path,
+      image: req.file && req.file.path,
     })
       .then((result) => res.json(result))
       .catch((err) => res.json(err));
