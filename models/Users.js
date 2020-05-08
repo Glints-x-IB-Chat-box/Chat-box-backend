@@ -7,13 +7,13 @@ const contactSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'user'
+    ref: "user",
   },
   chatId: {
     type: Schema.Types.ObjectId,
-    ref: 'chat'
-  }
-})
+    ref: "chat",
+  },
+});
 const userSchema = new Schema({
   username: {
     type: String,
@@ -40,8 +40,8 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  contacts: [contactSchema]
-})
+  contacts: [contactSchema],
+});
 
 userSchema.pre("save", function (next) {
   this.password = bcrypt.hashSync(this.password, saltRounds);
