@@ -26,7 +26,6 @@ module.exports = {
             res,
             `email ${req.body.email} already exist, are you forgot or want to create new one`
           );
-          //.json({ email: "Account email/username already exists" });
         } else {
           User.findOne({ username: req.body.username }).then((user) => {
             if (user) {
@@ -121,6 +120,7 @@ module.exports = {
     User.findByIdAndUpdate(req.params.usersId, {
       username: req.body.username,
       password: req.body.password,
+      confirmPassword: req.body.confirmPassword,
       about: req.body.about,
       image: req.file && req.file.path,
     })
