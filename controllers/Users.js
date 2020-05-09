@@ -103,11 +103,19 @@ module.exports = {
               privateKey,
               { expiresIn: 60 * 60 },
               (err, token) => {
-                res.json(token);
+                res.json({
+                  status: 'success',
+                  data:{
+                    token
+                  }
+                });
               }
             );
           } else {
-            res.json({ status: err });
+            res.json({
+              status: 'error',
+              message: 'User not found or password is wrong'
+            });
           }
         }
       })
