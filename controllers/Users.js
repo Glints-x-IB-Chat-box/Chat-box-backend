@@ -2,6 +2,7 @@ const User = require("../models/Users");
 const Bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { error, success } = require("./../utility/http-status-codes");
+const status = require("http-status-codes");
 require("dotenv").config();
 const validationRegister = require("../validation/register");
 const privateKey = process.env.PRIVATE_KEY;
@@ -22,16 +23,23 @@ module.exports = {
     User.findOne({ email: req.body.email })
       .then((user) => {
         if (user) {
+          res.status
           return error(
             res,
-            `email ${req.body.email} already exist, are you forgot or want to create new one`
+            {
+              status: 'error',
+              message: `email ${req.body.email} already exist, are you forgot or want to create new one`
+            }
           );
         } else {
           User.findOne({ username: req.body.username }).then((user) => {
             if (user) {
               return error(
                 res,
-                `username ${req.body.username} already exist, are you forgot or want to create new one`
+                {
+                  status: 'error',
+                  message: `username ${req.body.username} already exist, are you forgot or want to create new one`
+                }
               );
             } else {
               User.findOne({ phoneNumber: req.body.phoneNumber }).then(
@@ -39,11 +47,17 @@ module.exports = {
                   if (user) {
                     return error(
                       res,
-                      `phone number ${req.body.phoneNumber} already exist, please input another phone number`
+                      {
+                        status: `error`,
+                        message: `phone number ${req.body.phoneNumber} already exist, please input another phone number`
+                      }
                     );
                   } else {
                     User.create(obj);
-                    return success(res, "succes create account");
+                    return success(res, {
+                      status: 'success',
+                      message: "succes create account"
+                    });
                   }
                 }
               );
