@@ -53,7 +53,22 @@ module.exports = {
         usersId: [req.body.senderUserId, req.body.targetUserId],
       };
     }
-
+    let images = [];
+    if (req.files) {
+      if (req.files.images) {
+        for (let i = 0; i < req.files.images.length; i++) {
+          images.push(req.files.images[i].originalname);
+        }
+      }
+    }
+    let documents = [];
+    if (req.files) {
+      if (req.files.documents) {
+        for (let i = 0; i < req.files.documents.length; i++) {
+          documents.push(req.files.documents[i].originalname);
+        }
+      }
+    }
     Chat.findOneAndUpdate(
       { ...condition },
       {
@@ -62,9 +77,11 @@ module.exports = {
           messages: {
             senderUserId: req.body.senderUserId,
             message: req.body.message,
-            image: req.file && req.file.path,
+            images: images,
+            documents: documents,
           },
         },
+
         $set: {
           ...update,
         },
@@ -74,7 +91,9 @@ module.exports = {
         new: true, //result return is updated value
       }
     )
-      .then((response) => res.json(response))
+      .then((response) => {
+        console.log(req.file && req.file.path), res.json(response);
+      })
       .catch((err) => res.status(500).json(err));
   },
   deleteChat: (req, res) => {

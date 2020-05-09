@@ -5,7 +5,7 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./public/chatImage/");
+    cb(null, "./public/uploads/");
   },
   filename: (req, file, cb) => {
     cb(null, new Date().toISOString() + "-" + file.originalname);
@@ -18,7 +18,20 @@ const upload = multer({
   },
 });
 router.get("/getchat", ChatController.getChat);
-router.post("/postchat", upload.array("image", 10), ChatController.postChat);
+router.post(
+  "/postchat",
+  upload.fields([
+    {
+      name: "images",
+      maxCount: 12,
+    },
+    {
+      name: "documents",
+      maxCount: 12,
+    },
+  ]),
+  ChatController.postChat
+);
 router.delete("/deletechat/:chatId", ChatController.deleteChat);
 
 module.exports = router;
