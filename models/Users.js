@@ -3,17 +3,6 @@ const Schema = mongoose.Schema;
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-const contactSchema = new Schema({
-  userId: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'user'
-  },
-  chatId: {
-    type: Schema.Types.ObjectId,
-    ref: 'chat'
-  }
-})
 const userSchema = new Schema({
   username: {
     type: String,
@@ -26,7 +15,8 @@ const userSchema = new Schema({
   },
   image: {
     type: String,
-    default: false,
+    default:
+      "https://i0.wp.com/www.repol.copl.ulaval.ca/wp-content/uploads/2019/01/default-user-icon.jpg",
   },
   about: {
     type: String,
@@ -40,8 +30,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  contacts: [contactSchema]
-})
+  contacts: {
+    type: Schema.Types.ObjectId,
+    ref: "contact",
+  },
+});
 
 userSchema.pre("save", function (next) {
   this.password = bcrypt.hashSync(this.password, saltRounds);
