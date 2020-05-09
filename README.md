@@ -1,6 +1,6 @@
 # Chat Boxos
 
-## contributor: Ahmad Fakrozy, River Huang, Frederick Chen, Intan Adela
+## Contributor: Ahmad Fakrozy, River Huang, Frederick Chen, Intan Adela
 
 - Database API-Schema
 
@@ -26,12 +26,14 @@
 
 ### Users
 
-| Method | endpoint               | Description |
-| ------ | ---------------------- | ----------- |
-| GET    | `/users/get`           | get all     |
-| GET    | `/users/get/:id`       | get by:id   |
-| DELETE | `/users/delete/:id`    | delete data |
-| PUT    | `/users/edit/:usersId` | edit users  |
+| Method | endpoint               | Description                    |
+| ------ | ---------------------- | ------------------------------ |
+| GET    | `/users/get`           | get all                        |
+| GET    | `/users/get/:id`       | get by:id                      |
+| DELETE | `/users/delete/:id`    | delete data                    |
+| PUT    | `/users/edit/:usersId` | edit users ( Fields: username, |
+|        |                        | about, image,                  |
+|        |                        | password, confirmPassword )    |
 
 | Field users |
 | ----------- |
@@ -40,6 +42,7 @@
 | image       |
 | about       |
 | phoneNumber |
+| contacts    |
 
 ### Chats
 
@@ -53,8 +56,10 @@
 | ------------ |
 | senderUserId |
 | targetUserId |
-| message      |
-| image        |
+| messages     |
+| images       |
+| documents    |
+| time         |
 
 #### chat field
 
@@ -67,12 +72,16 @@
     "__v": 0,
     "messages": [
       {
-        "status": "pending",
-        "time": 1588869740608,
-        "_id": "5eb43a746ddd16272266dcf9",
-        "senderUserId": "5eb256f023285e23e9acc781",
-        "message": "ini adalah pesan untuk chat test22"
-      },
+            "status": "pending",  //enum [pending, sent, delivered,read] default: pending
+            "images": ["images.jpg"],
+            "time": 1589029263708,
+            "documents": [
+                "CSS_My_Site_End_Results.pdf",
+                "connections (1).html"
+            ],
+            "_id": "5eb6a992ba2c8a4cb19f153b",
+            "senderUserId": "5eb25c5323285e23e9acc784"
+        }
 ```
 
 ### Contact
@@ -89,7 +98,7 @@
 ```javascript
 "_id": "",
 "userId": {
-      "image": "",
+      "image": "", //default icon empty image
       "about": "",
       "_id": "",
       "username": "",
