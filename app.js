@@ -11,7 +11,7 @@ const privateKey = process.env.PRIVATE_KEY;
 mongodConnect = process.env.DB_CONNECTION;
 mongoose.connect(
   mongodConnect,
-  { useNewUrlParser: true, useUnifiedTopology: true },
+  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
   () => console.log("mongodb connected")
 );
 
