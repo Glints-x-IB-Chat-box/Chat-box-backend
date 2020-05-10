@@ -2,7 +2,10 @@ const Validator = require("validator");
 const isEmpty = require("is-empty");
 
 module.exports = function validateRegisterInput(data) {
-  let errors = {};
+  let errors = {
+    status: '',
+    error: {}
+  };
   data.username = !isEmpty(data.username) ? data.username : "";
   data.email = !isEmpty(data.email) ? data.email : "";
   data.phoneNumber = !isEmpty(data.phoneNumber) ? data.phoneNumber : "";
@@ -13,39 +16,61 @@ module.exports = function validateRegisterInput(data) {
   // Username validator
   if (Validator.isEmpty(data.username)) {
     errors.status = "error";
-    errors.error = {name : "username is required"};
+    errors.error = {
+      ...errors.error,
+      username : "username is required"
+    };
   }
   // Email validator
   if (Validator.isEmpty(data.email)) {
     errors.status = "error";
-    errors.error = {email : "Email is invalid"};
+    errors.error = {
+      ...errors.error,
+      email: "Email is invalid"
+    };
   }
   // Phone Number validator
   if (Validator.isEmpty(data.phoneNumber)) {
     errors.status = "error";
-    errors.error = {phoneNumber : "Phone number field is required"};
+    errors.error = {
+      ...errors.error,
+      phoneNumber: "Phone number field is required"
+    };
   }
   // Password validator
   if (Validator.isEmpty(data.password)) {
     errors.status = "error";
-    errors.error = {password : "Password is required"};
+    errors.error = {
+      ...errors.error,
+      password: "Password is required"
+    };
+  } else if (!Validator.isLength(data.password, {
+      min: 8,
+      max: 30
+  })) {
+    errors.status = "error";
+    errors.error = {
+      ...errors.error,
+      password: "Password must be at least 8 characters"
+    };
   }
+
   if (Validator.isEmpty(data.confirmPassword)) {
     errors.status = "error";
-    errors.error = {confirmPassword : "Confirm password is required"};
+    errors.error = {
+      ...errors.error,
+      confirmPassword: "Confirm password is required"
+    };
   } else if (!Validator.equals(data.password, data.confirmPassword)) {
     errors.status = "error";
     errors.error = {
+      ...errors.error,
       confirmPassword: "Password must match"
     };
   }
-  if (!Validator.isLength(data.password, { min: 8, max: 30 })) {
-    errors.status = "error";
-    errors.error = {password : "Password must be at least 8 characters"};
-  }
   return {
     errors,
-    isValid: isEmpty(errors),
+    isValid: isEmpty(errors.status),
   };
 
   /**
