@@ -30,9 +30,12 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  // contacts: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: "contact",
+  // },
   contacts: {
-    type: Schema.Types.ObjectId,
-    ref: "contact",
+    type: Array,
   },
 });
 

@@ -17,12 +17,9 @@ const upload = multer({
 router.post("/register", userController.register);
 router.post("/login", userController.authenticated);
 router.get("/get", userController.getAllData);
+router.get("/searchuser", userController.searchUsername);
 router.get("/get/:usersId", userController.getDataById);
 router.delete("/delete/:usersId", userController.deleteById);
-router.put(
-  "/edit/:usersId",
-  upload.single("imageUrl"),
-  userController.editById
-);
+router.put("/edit/:usersId", upload.single("image"), userController.editById);
 
 module.exports = router;

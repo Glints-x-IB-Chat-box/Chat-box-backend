@@ -41,8 +41,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/public/chatImage", express.static("public"));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-app.use("/chat", ChatRouter);
-app.use("/contacts", contactsRouter);
+app.use("/chat", validateUser, ChatRouter);
+app.use("/contacts", validateUser, contactsRouter);
 
 function validateUser(req, res, next) {
   jwt.verify(req.headers["x-access-token"], privateKey, (err, decoded) => {
