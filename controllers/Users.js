@@ -125,7 +125,7 @@ module.exports = {
       .catch((err) => res.json(err));
   },
   searchUsername: (req, res) => {
-    const username = new RegExp(req.body["username"], "i");
+    const username = new RegExp(req.query["username"], "i");
     User.find({ username })
       .select("-password")
       .then((result) => res.json(result))
