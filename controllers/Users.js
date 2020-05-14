@@ -47,7 +47,7 @@ module.exports = {
                     User.create(obj);
                     return success(res, {
                       status: "success",
-                      message: "succes create account",
+                      message: "Success create account!",
                     });
                   }
                 }
