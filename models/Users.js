@@ -16,7 +16,7 @@ const userSchema = new Schema({
   image: {
     type: String,
     default:
-      "https://i0.wp.com/www.repol.copl.ulaval.ca/wp-content/uploads/2019/01/default-user-icon.jpg",
+      "https://raw.githubusercontent.com/ozy-ahmad/images/master/users.png",
   },
   about: {
     type: String,
