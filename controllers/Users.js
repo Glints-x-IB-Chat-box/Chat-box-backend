@@ -92,7 +92,7 @@ module.exports = {
                 id: response._id,
               },
               privateKey,
-              { expiresIn: 60 * 60 },
+              { expiresIn: "24h" },
               (err, token) => {
                 res.json({
                   status: "success",
