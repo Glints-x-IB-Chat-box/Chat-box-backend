@@ -26,14 +26,14 @@ module.exports = {
           res.status;
           return error(res, {
             status: "error",
-            message: `email ${req.body.email} already exist, are you forgot or want to create new one`,
+            message: `Email ${req.body.email} already exist, are you forgot or want to create new one`,
           });
         } else {
           User.findOne({ username: req.body.username }).then((user) => {
             if (user) {
               return error(res, {
                 status: "error",
-                message: `username ${req.body.username} already exist, are you forgot or want to create new one`,
+                message: `Username ${req.body.username} already exist, are you forgot or want to create new one`,
               });
             } else {
               User.findOne({ phoneNumber: req.body.phoneNumber }).then(
@@ -41,7 +41,7 @@ module.exports = {
                   if (user) {
                     return error(res, {
                       status: `error`,
-                      message: `phone number ${req.body.phoneNumber} already exist, please input another phone number`,
+                      message: `Phone number ${req.body.phoneNumber} already exist, please input another phone number`,
                     });
                   } else {
                     User.create(obj);
