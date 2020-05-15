@@ -78,6 +78,6 @@ module.exports = {
       }
     )
       .then((result) => res.json(result))
-      .catch((err) => res.json(err));
+      .catch((err) => res.status(500).json(err));
   },
 };
