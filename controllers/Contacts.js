@@ -2,11 +2,18 @@ const Contact = require("../models/Contacts");
 const UserContact = require("../models/Users");
 module.exports = {
   addContact: (req, res) => {
+    // console.log(req.body);
+    // if (req.body.userId === req.body.userContactId) {
+    //   return res.status(400).json({ message: "Cannot add your own contact" });
+    // } else
     UserContact.findOneAndUpdate(
-      { _id: req.body.userId },
+      {
+        _id: req.body.userId,
+        _id: { $ne: req.body.userContactId },
+        contacts: { $nin: [req.body.userContactId] },
+      },
       { $push: { contacts: req.body.userContactId } },
       {
-        upsert: true,
         new: true,
       }
     )
@@ -18,7 +25,7 @@ module.exports = {
         res.json(result);
       })
       .catch((err) => {
-        res.json(err);
+        res.status(500).json(err);
       });
   },
   getContact: (req, res) => {

@@ -47,7 +47,7 @@ app.use("/contacts", validateUser, contactsRouter);
 function validateUser(req, res, next) {
   jwt.verify(req.headers["x-access-token"], privateKey, (err, decoded) => {
     if (err) {
-      res.json(err);
+      res.status(500).json(err);
     } else {
       req.body.userId = decoded.id;
       next();
