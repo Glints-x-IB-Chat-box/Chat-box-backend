@@ -45,6 +45,7 @@ module.exports = {
             image: 1,
             email: 1,
             phoneNumber: 1,
+            about: 1,
           }
         ).then((result) => {
           res.json(result);
