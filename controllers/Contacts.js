@@ -8,12 +8,15 @@ module.exports = {
     // } else
     UserContact.findOneAndUpdate(
       {
-        _id: req.body.userId,
-        _id: { $ne: req.body.userContactId },
-        contacts: { $nin: [req.body.userContactId] },
+        $and: [
+          { _id: req.body.userId },
+          { _id: { $ne: req.body.userContactId } },
+          { contacts: { $nin: [req.body.userContactId] } },
+        ],
       },
       { $push: { contacts: req.body.userContactId } },
       {
+        upsert: true,
         new: true,
       }
     )
@@ -22,6 +25,7 @@ module.exports = {
       // })
 
       .then((result) => {
+        console.log(result);
         res.json(result);
       })
       .catch((err) => {

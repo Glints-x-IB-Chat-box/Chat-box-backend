@@ -20,7 +20,7 @@ const userSchema = new Schema({
   },
   about: {
     type: String,
-    default: "Hi, I'm using Chat Boxos",
+    default: "Hi, I'm using Direct Messenger",
   },
   phoneNumber: {
     type: String,
