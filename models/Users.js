@@ -16,11 +16,11 @@ const userSchema = new Schema({
   image: {
     type: String,
     default:
-      "https://i0.wp.com/www.repol.copl.ulaval.ca/wp-content/uploads/2019/01/default-user-icon.jpg",
+      "https://raw.githubusercontent.com/ozy-ahmad/images/master/users.png",
   },
   about: {
     type: String,
-    default: "Hi, I'm using Chat Boxos",
+    default: "Hi, I'm using Direct Messenger",
   },
   phoneNumber: {
     type: String,
@@ -30,9 +30,12 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  // contacts: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: "contact",
+  // },
   contacts: {
-    type: Schema.Types.ObjectId,
-    ref: "contact",
+    type: Array,
   },
 });
 

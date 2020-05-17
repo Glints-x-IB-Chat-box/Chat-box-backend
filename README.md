@@ -90,14 +90,12 @@
 | ------ | ---------------------- | ----------- |
 | POST   | `/contacts/addcontact` | add contact |
 | GET    | `/contacts/get`        | get all     |
-| GET    | `/contacts/get/:id`    | get by:id   |
 | DELETE | `/contacts/delete/:id` | delete data |
 
 #### contact field
 
 ```javascript
-"_id": "",
-"userId": {
+"userContactId": {
       "image": "", //default icon empty image
       "about": "",
       "_id": "",

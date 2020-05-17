@@ -23,40 +23,31 @@ module.exports = {
     User.findOne({ email: req.body.email })
       .then((user) => {
         if (user) {
-          res.status
-          return error(
-            res,
-            {
-              status: 'error',
-              message: `email ${req.body.email} already exist, are you forgot or want to create new one`
-            }
-          );
+          res.status;
+          return error(res, {
+            status: "error",
+            message: `Email ${req.body.email} already exist, are you forgot or want to create new one`,
+          });
         } else {
           User.findOne({ username: req.body.username }).then((user) => {
             if (user) {
-              return error(
-                res,
-                {
-                  status: 'error',
-                  message: `username ${req.body.username} already exist, are you forgot or want to create new one`
-                }
-              );
+              return error(res, {
+                status: "error",
+                message: `Username ${req.body.username} already exist, are you forgot or want to create new one`,
+              });
             } else {
               User.findOne({ phoneNumber: req.body.phoneNumber }).then(
                 (user) => {
                   if (user) {
-                    return error(
-                      res,
-                      {
-                        status: `error`,
-                        message: `phone number ${req.body.phoneNumber} already exist, please input another phone number`
-                      }
-                    );
+                    return error(res, {
+                      status: `error`,
+                      message: `Phone number ${req.body.phoneNumber} already exist, please input another phone number`,
+                    });
                   } else {
                     User.create(obj);
                     return success(res, {
-                      status: 'success',
-                      message: "succes create account"
+                      status: "success",
+                      message: "Success create account!",
                     });
                   }
                 }
@@ -101,20 +92,20 @@ module.exports = {
                 id: response._id,
               },
               privateKey,
-              { expiresIn: 60 * 60 },
+              { expiresIn: "24h" },
               (err, token) => {
                 res.json({
-                  status: 'success',
-                  data:{
-                    token
-                  }
+                  status: "success",
+                  data: {
+                    token,
+                  },
                 });
               }
             );
           } else {
             res.json({
-              status: 'error',
-              message: 'User not found or password is wrong'
+              status: "error",
+              message: "User not found or password is wrong",
             });
           }
         }
@@ -133,19 +124,35 @@ module.exports = {
       .then((result) => res.json(result))
       .catch((err) => res.json(err));
   },
+  searchUsername: (req, res) => {
+    const username = new RegExp(req.query["username"], "i");
+    User.find({ username })
+      .select("-password")
+      .then((result) => res.json(result))
+      .catch((err) => res.json(err));
+  },
   deleteById: (req, res) => {
     User.findByIdAndRemove(req.params.usersId)
       .then((result) => res.json(result))
       .catch((err) => res.json(err));
   },
   editById: (req, res) => {
-    User.findByIdAndUpdate(req.params.usersId, {
-      username: req.body.username,
-      password: req.body.password,
-      confirmPassword: req.body.confirmPassword,
-      about: req.body.about,
-      image: req.file && req.file.path,
-    })
+    // let data = {};
+    // if (req.body.username) {
+    //   data.username = req.body.username;
+    // }
+
+    User.findByIdAndUpdate(
+      req.params.usersId,
+      {
+        username: req.body.username,
+        about: req.body.about,
+        image: req.file && req.file.path,
+      },
+      {
+        new: true,
+      }
+    )
       .then((result) => res.json(result))
       .catch((err) => res.json(err));
   },
