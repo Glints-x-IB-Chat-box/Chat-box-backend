@@ -25,8 +25,19 @@ module.exports = {
       // })
 
       .then((result) => {
-        console.log(result);
-        res.json(result);
+        UserContact.findById(
+          { _id: req.body.userContactId },
+          {
+            _id: 1,
+            username: 1,
+            image: 1,
+            email: 1,
+            phoneNumber: 1,
+            about: 1,
+          }
+        ).then((result) => {
+          res.json(result);
+        });
       })
       .catch((err) => {
         res.status(500).json(err);
