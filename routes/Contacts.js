@@ -4,8 +4,8 @@ const contactController = require("../controllers/Contacts");
 
 router.post("/addcontact", contactController.addContact);
 router.get("/get", contactController.getContact);
-// router.get("/get/:contactId", contactController.getContactById);
-// router.get("/searchcontact", contactController.searchContact);
+router.get("/get/:contactId", contactController.getContactById);
+router.get("/searchcontact", contactController.searchContact);
 router.delete("/delete/:contactId", contactController.deleteContactById);
 
 module.exports = router;

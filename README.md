@@ -46,11 +46,13 @@
 
 ### Chats
 
-| Method | endpoint               | Description |
-| ------ | ---------------------- | ----------- |
-| GET    | `/chat/getchat`        | get all     |
-| POST   | `/chat/postchat`       | post chat   |
-| DELETE | `/chat/deletechat/:id` | delete chat |
+| Method | endpoint                   | Description         |
+| ------ | -------------------------- | ------------------- |
+| GET    | `/chat/getchat`            | get all             |
+| GET    | `/chat/getbyid/:chatId`    | get by Id           |
+| GET    | `/gettarget/:targetUserId` | get by targetUserId |
+| POST   | `/chat/postchat`           | post chat           |
+| DELETE | `/chat/deletechat/:id`     | delete chat         |
 
 | Chat field   |
 | ------------ |
@@ -59,7 +61,8 @@
 | messages     |
 | images       |
 | documents    |
-| time         |
+| createdAt    |
+| updatedAt    |
 
 #### chat field
 
@@ -74,23 +77,27 @@
       {
             "status": "pending",  //enum [pending, sent, delivered,read] default: pending
             "images": ["images.jpg"],
-            "time": 1589029263708,
             "documents": [
                 "CSS_My_Site_End_Results.pdf",
                 "connections (1).html"
             ],
             "_id": "5eb6a992ba2c8a4cb19f153b",
-            "senderUserId": "5eb25c5323285e23e9acc784"
-        }
+            "senderUserId": "5eb25c5323285e23e9acc784",
+            "message": "ini adalah pesan untuk frederick",
+            "updatedAt": "2020-05-18T14:41:42.536Z",
+            "createdAt": "2020-05-18T14:41:42.536Z"
+        },
 ```
 
 ### Contact
 
-| Method | endpoint               | Description |
-| ------ | ---------------------- | ----------- |
-| POST   | `/contacts/addcontact` | add contact |
-| GET    | `/contacts/get`        | get all     |
-| DELETE | `/contacts/delete/:id` | delete data |
+| Method | endpoint                   | Description       |
+| ------ | -------------------------- | ----------------- |
+| POST   | `/contacts/addcontact`     | add contact       |
+| GET    | `/contacts/get`            | get all           |
+| GET    | `/contacts/get/:contactId` | get contact by Id |
+| GET    | `/contacts/searchcontact`  | search contact    |
+| DELETE | `/contacts/delete/:id`     | delete data       |
 
 #### contact field
 

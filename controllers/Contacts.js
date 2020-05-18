@@ -71,24 +71,28 @@ module.exports = {
         res.json(err);
       });
   },
-  // getContactById: (req, res) => {
-  //   Contact.findById(req.params.contactId)
-  //     .populate({
-  //       path: "userId",
-  //       select: ["username", "email", "image", "about", "phoneNumber"],
-  //     })
-  //     .then((result) => res.json(result))
-  //     .catch((err) => res.json(err));
-  // },
-  // searchContact: (req, res) => {
-  //   const username = new RegExp(req.body["username"], "i");
-  //   console.log(username);
-  //   Contact.find({ username })
-  //     .then((result) => res.json(result))
-  //     .catch((err) => {
-  //       throw err;
-  //     });
-  // },
+  getContactById: (req, res) => {
+    console.log(req.params.contactId);
+    UserContact.findById(req.params.contactId)
+      .select({
+        _id: 1,
+        username: 1,
+        image: 1,
+        email: 1,
+        phoneNumber: 1,
+        about: 1,
+      })
+      .then((result) => res.json(result))
+      .catch((err) => res.status(500).json(err));
+  },
+  searchContact: (req, res) => {
+    const username = new RegExp(req.query["username"], "i");
+    console.log(username);
+    UserContact.find({ username })
+      .select("-password")
+      .then((result) => res.json(result))
+      .catch((err) => res.status(500).json(err));
+  },
   deleteContactById: (req, res) => {
     // Contact.findByIdAndRemove(req.params.contactId)
     console.log(req.params.contactId);
