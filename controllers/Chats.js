@@ -45,7 +45,7 @@ module.exports = {
         //         $eq: mongoose.Types.ObjectId(req.body.targetUserId),
         //       },
         //     },
-        //   ],
+        //   ], //this just for checking the flow
         // },
         usersId: {
           $all: [
@@ -119,11 +119,29 @@ module.exports = {
   },
   getChatById: (req, res) => {
     Chat.findById(req.params.chatId)
+      .populate("user")
       .then((result) => res.json(result))
       .catch((err) => res.status(500).json(err));
   },
   getChatByTarget: (req, res) => {
-    Chat.find({ usersId: { $all: [req.body.userId, req.params.targetUserId] } })
+    console.log(req.body.userId, req.params.targetUserId);
+    Chat.find({
+      usersId: {
+        $all: [
+          {
+            $elemMatch: {
+              $eq: mongoose.Types.ObjectId(req.body.userId),
+            },
+          },
+          {
+            $elemMatch: {
+              $eq: mongoose.Types.ObjectId(req.params.targetUserId),
+            },
+          },
+        ],
+      },
+    })
+      .populate("usersId")
       .then((result) => res.json(result))
       .catch((err) => res.status(500).json(err));
   },
