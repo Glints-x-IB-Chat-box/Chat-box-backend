@@ -33,5 +33,6 @@ router.post(
   ChatController.postChat
 );
 router.delete("/deletechat/:chatId", ChatController.deleteChat);
-
+router.get("/getbyid/:chatId", ChatController.getChatById);
+router.get("/gettarget/:targetUserId", ChatController.getChatByTarget);
 module.exports = router;

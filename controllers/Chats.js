@@ -33,6 +33,20 @@ module.exports = {
     if (req.body.targetUserId) {
       condition = {
         ...condition,
+        // usersId: {
+        //   $all: [
+        //     {
+        //       $elemMatch: {
+        //         $eq: mongoose.Types.ObjectId(req.body.senderUserId),
+        //       },
+        //     },
+        //     {
+        //       $elemMatch: {
+        //         $eq: mongoose.Types.ObjectId(req.body.targetUserId),
+        //       },
+        //     },
+        //   ],
+        // },
         usersId: {
           $all: [
             {
@@ -48,11 +62,13 @@ module.exports = {
           ],
         }, //this used if private chat needs to be update/insert
       };
+
       update = {
         ...update,
         usersId: [req.body.senderUserId, req.body.targetUserId],
       };
     }
+
     let images = [];
     if (req.files) {
       if (req.files.images) {
@@ -99,6 +115,16 @@ module.exports = {
   deleteChat: (req, res) => {
     Chat.findByIdAndRemove({ _id: req.params.chatId })
       .then((response) => res.json(response))
+      .catch((err) => res.status(500).json(err));
+  },
+  getChatById: (req, res) => {
+    Chat.findById(req.params.chatId)
+      .then((result) => res.json(result))
+      .catch((err) => res.status(500).json(err));
+  },
+  getChatByTarget: (req, res) => {
+    Chat.find({ usersId: { $all: [req.body.userId, req.params.targetUserId] } })
+      .then((result) => res.json(result))
       .catch((err) => res.status(500).json(err));
   },
 };
