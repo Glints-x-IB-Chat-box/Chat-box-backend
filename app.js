@@ -1,12 +1,19 @@
-var express = require("express");
-var path = require("path");
+const express = require("express");
+const app = express()
+const http = require('http')
+const path = require("path");
+const socketio = require('socket.io')
+const server = http.createServer(app)
+const io = socketio(server)
 const cors = require("cors");
 const bodyParser = require("body-parser");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
 const mongoose = require("mongoose");
-require("dotenv").config();
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+
 const privateKey = process.env.PRIVATE_KEY;
 mongodConnect = process.env.DB_CONNECTION;
 mongoose.connect(
@@ -15,11 +22,12 @@ mongoose.connect(
   () => console.log("mongodb connected")
 );
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/Users");
+
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/Users");
 const ChatRouter = require("./routes/Chat");
 const contactsRouter = require("./routes/Contacts");
-var app = express();
+
 
 app.use(cors());
 app.use(logger("dev"));
@@ -44,6 +52,24 @@ app.use("/users", usersRouter);
 app.use("/chat", validateUser, ChatRouter);
 app.use("/contacts", validateUser, contactsRouter);
 
+io.on('connection', (socket) => {
+
+  console.log('a user connected');
+  socket.emit('connected', {user: 'You', text: `connected to circle chatbox`})
+  socket.on('sendMessage',(message ,callback) => {
+    // const user = getUser(socket.id);
+    // io.to(user.room).emit('message')
+    socket.emit('message', {user: 'You', text: `can chat with in private`})
+  })
+
+  // ${user.name} 
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+  
+});
+
+
 function validateUser(req, res, next) {
   jwt.verify(req.headers["x-access-token"], privateKey, (err, decoded) => {
     if (err) {
@@ -54,5 +80,7 @@ function validateUser(req, res, next) {
     }
   });
 }
+port = 8000
+server.listen(`${port}`, () => console.log(`server is running on ${port}`))
 
 module.exports = app;

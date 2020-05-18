@@ -1,26 +1,28 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const messageSchema = new Schema({
-  senderUserId: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: "user",
+const messageSchema = new Schema(
+  {
+    senderUserId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "user",
+    },
+    message: String,
+    status: {
+      type: String,
+      enum: ["pending", "sent", "delivered", "read"],
+      default: "pending",
+    },
+    images: { type: Array, default: [] },
+    // time: {
+    //   type: Number,
+    //   default: new Date().getTime(),
+    // },
+    documents: { type: Array, default: [] },
   },
-  message: String,
-  status: {
-    type: String,
-    enum: ["pending", "sent", "delivered", "read"],
-    default: "pending",
-  },
-  images: { type: Array, default: [] },
-
-  time: {
-    type: Number,
-    default: new Date().getTime(),
-  },
-  documents: { type: Array, default: [] },
-});
+  { timestamps: true }
+);
 const chatSchema = new Schema({
   messages: [messageSchema],
   usersId: [

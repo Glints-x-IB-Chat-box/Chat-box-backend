@@ -33,6 +33,20 @@ module.exports = {
     if (req.body.targetUserId) {
       condition = {
         ...condition,
+        // usersId: {
+        //   $all: [
+        //     {
+        //       $elemMatch: {
+        //         $eq: mongoose.Types.ObjectId(req.body.senderUserId),
+        //       },
+        //     },
+        //     {
+        //       $elemMatch: {
+        //         $eq: mongoose.Types.ObjectId(req.body.targetUserId),
+        //       },
+        //     },
+        //   ], //this just for checking the flow
+        // },
         usersId: {
           $all: [
             {
@@ -48,11 +62,13 @@ module.exports = {
           ],
         }, //this used if private chat needs to be update/insert
       };
+
       update = {
         ...update,
         usersId: [req.body.senderUserId, req.body.targetUserId],
       };
     }
+
     let images = [];
     if (req.files) {
       if (req.files.images) {
@@ -99,6 +115,34 @@ module.exports = {
   deleteChat: (req, res) => {
     Chat.findByIdAndRemove({ _id: req.params.chatId })
       .then((response) => res.json(response))
+      .catch((err) => res.status(500).json(err));
+  },
+  getChatById: (req, res) => {
+    Chat.findById(req.params.chatId)
+      .populate("user")
+      .then((result) => res.json(result))
+      .catch((err) => res.status(500).json(err));
+  },
+  getChatByTarget: (req, res) => {
+    console.log(req.body.userId, req.params.targetUserId);
+    Chat.find({
+      usersId: {
+        $all: [
+          {
+            $elemMatch: {
+              $eq: mongoose.Types.ObjectId(req.body.userId),
+            },
+          },
+          {
+            $elemMatch: {
+              $eq: mongoose.Types.ObjectId(req.params.targetUserId),
+            },
+          },
+        ],
+      },
+    })
+      .populate("usersId")
+      .then((result) => res.json(result))
       .catch((err) => res.status(500).json(err));
   },
 };
