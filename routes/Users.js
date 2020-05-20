@@ -20,6 +20,7 @@ router.get("/get", userController.getAllData);
 router.get("/searchuser", userController.searchUsername);
 router.get("/get/:usersId", userController.getDataById);
 router.delete("/delete/:usersId", userController.deleteById);
+router.get("/getProfile", userController.getDataById);
 router.put("/edit/:usersId", upload.single("image"), userController.editById);
 
 module.exports = router;

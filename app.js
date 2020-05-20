@@ -49,6 +49,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/public/chatImage", express.static("public"));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/usersSecure", validateUser, usersRouter);
 app.use("/chat", validateUser, ChatRouter);
 app.use("/contacts", validateUser, contactsRouter);
 

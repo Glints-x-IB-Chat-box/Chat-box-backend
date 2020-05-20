@@ -120,7 +120,8 @@ module.exports = {
       .catch((err) => err);
   },
   getDataById: (req, res) => {
-    User.findById(req.params.usersId)
+    userId = req.params.usersId || req.body.userId
+    User.findById(userId)
       .then((result) => res.json(result))
       .catch((err) => res.json(err));
   },
