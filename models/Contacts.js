@@ -12,3 +12,4 @@ const contactSchema = new Schema({
   },
 });
 module.exports = mongoose.model("contact", contactSchema);
+//this model is not used because contact controller get directly from users model
