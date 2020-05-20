@@ -133,18 +133,20 @@ module.exports = {
       .catch((err) => res.json(err));
   },
   deleteById: (req, res) => {
-    User.findByIdAndRemove(req.params.usersId)
+    userId = req.body.userId
+    User.findByIdAndRemove(userId)
       .then((result) => res.json(result))
       .catch((err) => res.json(err));
   },
   editById: (req, res) => {
+    userId = req.body.userId
     // let data = {};
     // if (req.body.username) {
     //   data.username = req.body.username;
     // }
 
     User.findByIdAndUpdate(
-      req.params.usersId,
+      userId,
       {
         username: req.body.username,
         about: req.body.about,
