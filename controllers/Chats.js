@@ -6,7 +6,7 @@ module.exports = {
   getChat: (req, res) => {
     Chat.find()
       .then((response) => res.json(response))
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => res.status(400).json(err));
   },
   postChat: (req, res) => {
     /**
@@ -33,23 +33,11 @@ module.exports = {
     if (req.body.targetUserId) {
       condition = {
         ...condition,
-        // usersId: {
-        //   $all: [
-        //     {
-        //       $elemMatch: {
-        //         $eq: mongoose.Types.ObjectId(req.body.senderUserId),
-        //       },
-        //     },
-        //     {
-        //       $elemMatch: {
-        //         $eq: mongoose.Types.ObjectId(req.body.targetUserId),
-        //       },
-        //     },
-        //   ], //this just for checking the flow
-        // },
         usersId: {
+          // The $all operator selects the documents where the value of a field is an array that contains all the specified elements.
           $all: [
             {
+              //$elemMatch = find the element match with the data
               $elemMatch: {
                 $eq: mongoose.Types.ObjectId(req.body.senderUserId),
               },
@@ -97,7 +85,7 @@ module.exports = {
             documents: documents,
           },
         },
-
+        // set is update base on obeject of "update" variable
         $set: {
           ...update,
         },
@@ -110,21 +98,21 @@ module.exports = {
       .then((response) => {
         console.log(req.file && req.file.path), res.json(response);
       })
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => res.status(400).json(err));
   },
   deleteChat: (req, res) => {
     Chat.findByIdAndRemove({ _id: req.params.chatId })
       .then((response) => res.json(response))
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => res.status(400).json(err));
   },
   getChatById: (req, res) => {
     Chat.findById(req.params.chatId)
       .populate("user")
       .then((result) => res.json(result))
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => res.status(400).json(err));
   },
   getChatByTarget: (req, res) => {
-    console.log(req.body.userId, req.params.targetUserId);
+    // console.log(req.body.userId, req.params.targetUserId);
     Chat.find({
       usersId: {
         $all: [
@@ -143,6 +131,6 @@ module.exports = {
     })
       .populate("usersId")
       .then((result) => res.json(result))
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => res.status(400).json(err));
   },
 };

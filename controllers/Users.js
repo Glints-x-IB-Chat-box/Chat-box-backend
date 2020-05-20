@@ -16,53 +16,44 @@ module.exports = {
       password: req.body.password,
       confirmPassword: req.body.confirmPassword,
     };
+    //validation register
     const { errors, isValid } = validationRegister(obj);
     if (!isValid) {
-      res.status(status.INTERNAL_SERVER_ERROR).json(errors);
+      return res.status(status.INTERNAL_SERVER_ERROR).json(errors);
     }
-    User.findOne({ email: req.body.email })
-      .then((user) => {
-        if (user) {
-          res.status;
-          return error(res, {
-            status: "error",
-            message: `Email ${req.body.email} already exist, are you forgot or want to create new one`,
-          });
-        } else {
-          User.findOne({ username: req.body.username }).then((user) => {
-            if (user) {
-              return error(res, {
-                status: "error",
-                message: `Username ${req.body.username} already exist, are you forgot or want to create new one`,
-              });
-            } else {
-              User.findOne({ phoneNumber: req.body.phoneNumber }).then(
-                (user) => {
-                  if (user) {
-                    return error(res, {
-                      status: `error`,
-                      message: `Phone number ${req.body.phoneNumber} already exist, please input another phone number`,
-                    });
-                  } else {
-                    User.create(obj);
-                    return success(res, {
-                      status: "success",
-                      message: "Success create account!",
-                    });
-                  }
-                }
-              );
-            }
-          });
-        }
-      })
-      .catch((err) => {
-        throw err;
-      });
+    User.find().then((user) => {
+      // Email duplicate validator
+      if (user.find((el) => el.email === obj.email)) {
+        return error(res, {
+          status: "error",
+          message: `Email ${req.body.email} already exist!`,
+        });
+      }
+      // username duplicate validator
+      if (user.find((el) => el.username === obj.username)) {
+        return error(res, {
+          status: "error",
+          message: `username ${req.body.username} already exist!`,
+        });
+      }
+      // Phone number dublicate validator
+      if (user.find((el) => el.phoneNumber === obj.phoneNumber)) {
+        return error(res, {
+          status: "error",
+          message: `Phone number ${req.body.phoneNumber} already exist!`,
+        });
+      }
+      User.create(obj);
+      return success(res, {
+        status: "success",
+        message: "Success create account!",
+      }).catch((err) => res.status(400).json(err));
+    });
   },
-
+  // this is login controller
   authenticated: function (req, res, next) {
     let { email, username, phoneNumber } = req.body;
+    //condition for login by username, email, phonenumber
     let conditions = !!email ? { email: email } : { phoneNumber: phoneNumber };
     if (username) {
       conditions = {
@@ -92,7 +83,7 @@ module.exports = {
                 id: response._id,
               },
               privateKey,
-              { expiresIn: "24h" },
+              { expiresIn: "24h" }, //token expired 1 day
               (err, token) => {
                 res.json({
                   status: "success",
@@ -117,24 +108,24 @@ module.exports = {
   getAllData: (req, res) => {
     User.find({})
       .then((result) => res.json(result))
-      .catch((err) => err);
+      .catch((err) => res.status(400).json(err));
   },
   getDataById: (req, res) => {
     User.findById(req.params.usersId)
       .then((result) => res.json(result))
-      .catch((err) => res.json(err));
+      .catch((err) => res.status(400).json(err));
   },
   searchUsername: (req, res) => {
-    const username = new RegExp(req.query["username"], "i");
+    const username = new RegExp(req.query["username"], "i"); //regex for search by query
     User.find({ username })
-      .select("-password")
+      .select("-password") //not include the password
       .then((result) => res.json(result))
-      .catch((err) => res.json(err));
+      .catch((err) => res.status(400).json(err));
   },
   deleteById: (req, res) => {
     User.findByIdAndRemove(req.params.usersId)
       .then((result) => res.json(result))
-      .catch((err) => res.json(err));
+      .catch((err) => res.status(400).json(err));
   },
   editById: (req, res) => {
     // let data = {};
