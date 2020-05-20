@@ -140,23 +140,21 @@ module.exports = {
   },
   editById: (req, res) => {
     userId = req.body.userId
-    // let data = {};
-    // if (req.body.username) {
-    //   data.username = req.body.username;
-    // }
-
-    User.findByIdAndUpdate(
-      userId,
-      {
-        username: req.body.username,
-        about: req.body.about,
-        image: req.file && req.file.path,
-      },
-      {
-        new: true,
-      }
-    )
-      .then((result) => res.json(result))
+    User.findById(userId)
+      .then((result) => {
+        User.findByIdAndUpdate(
+            userId, {
+              username: req.body.username || result.username,
+              about: req.body.about || result.about,
+              image: req.file && req.file.path || result.image,
+            }, {
+              new: true,
+            }
+          )
+          .then((result) => res.json(result))
+          .catch((err) => res.json(err));
+      })
       .catch((err) => res.json(err));
+
   },
 };
