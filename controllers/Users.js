@@ -111,7 +111,7 @@ module.exports = {
       .catch((err) => res.status(400).json(err));
   },
   getDataById: (req, res) => {
-    userId = req.params.usersId || req.body.userId
+    userId = req.params.usersId || req.body.userId;
     User.findById(userId)
       .then((result) => res.json(result))
       .catch((err) => res.status(400).json(err));
@@ -124,28 +124,29 @@ module.exports = {
       .catch((err) => res.status(400).json(err));
   },
   deleteById: (req, res) => {
-    userId = req.body.userId
+    userId = req.body.userId;
     User.findByIdAndRemove(userId)
       .then((result) => res.json(result))
       .catch((err) => res.status(400).json(err));
   },
   editById: (req, res) => {
-    userId = req.body.userId
+    userId = req.body.userId;
     User.findById(userId)
       .then((result) => {
         User.findByIdAndUpdate(
-            userId, {
-              username: req.body.username || result.username,
-              about: req.body.about || result.about,
-              image: req.file && req.file.path || result.image,
-            }, {
-              new: true,
-            }
-          )
+          userId,
+          {
+            username: req.body.username || result.username,
+            about: req.body.about || result.about,
+            image: (req.file && req.file.path) || result.image,
+          },
+          {
+            new: true,
+          }
+        )
           .then((result) => res.json(result))
           .catch((err) => res.json(err));
       })
       .catch((err) => res.json(err));
-
   },
 };
