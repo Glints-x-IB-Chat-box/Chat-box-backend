@@ -17,7 +17,12 @@ const privateKey = process.env.PRIVATE_KEY;
 mongodConnect = process.env.DB_CONNECTION;
 mongoose.connect(
   mongodConnect,
-  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  },
   () => console.log("mongodb connected")
 );
 
@@ -53,16 +58,15 @@ app.use("/contacts", validateUser, contactsRouter);
 io.on("connection", (socket) => {
   console.log("a user connected");
   socket.on("sendMessage", (data) => {
-    io.sockets.emit('sendMessage', data)
-    // console.log(data) 
+    io.sockets.emit("sendMessage", data);
+    // console.log(data)
     // get data from the message being sent from the client
-  })
- 
+  });
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
 });
-
 
 function validateUser(req, res, next) {
   jwt.verify(req.headers["x-access-token"], privateKey, (err, decoded) => {
