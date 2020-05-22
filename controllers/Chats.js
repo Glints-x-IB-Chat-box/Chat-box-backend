@@ -4,8 +4,32 @@ const mongoose = require("mongoose");
 
 module.exports = {
   getChat: (req, res) => {
-    Chat.find()
-      .then((response) => res.json(response))
+    //distinct is for unique value
+    Chat.distinct("usersId", {
+      usersId: {
+        $in: [mongoose.Types.ObjectId(req.body.userId)],
+      },
+    })
+      .then((usersId) => {
+        User.find({
+          _id: {
+            $in: usersId,
+            $ne: mongoose.Types.ObjectId(req.body.userId), //to validate user cant showing himself
+          },
+        })
+          .select({
+            _id: 1,
+            username: 1,
+            image: 1,
+            email: 1,
+            phoneNumber: 1,
+            about: 1,
+          })
+          .then((response) => {
+            res.json(response);
+          });
+      })
+
       .catch((err) => res.status(400).json(err));
   },
   postChat: (req, res) => {
@@ -129,7 +153,10 @@ module.exports = {
         ],
       },
     })
+      // .sort("-createdAt")
+      // .limit(5)
       .populate("usersId")
+      .select("-password")
       .then((result) => res.json(result))
       .catch((err) => res.status(400).json(err));
   },
