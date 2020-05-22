@@ -124,13 +124,13 @@ module.exports = {
       .catch((err) => res.status(400).json(err));
   },
   deleteById: (req, res) => {
-    userId = req.body.userId;
+    userId = req.params.usersId || req.body.userId;
     User.findByIdAndRemove(userId)
       .then((result) => res.json(result))
       .catch((err) => res.status(400).json(err));
   },
   editById: (req, res) => {
-    userId = req.body.userId;
+    userId = req.headers.userId;
     User.findById(userId)
       .then((result) => {
         User.findByIdAndUpdate(

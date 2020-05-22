@@ -44,6 +44,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/public/chatImage", express.static("public"));
+app.use("/public", express.static("public"));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/usersSecure", validateUser, usersRouter);
@@ -74,6 +75,7 @@ function validateUser(req, res, next) {
       res.status(500).json(err);
     } else {
       req.body.userId = decoded.id; //tronsform token to be sent to req.body.userId
+      req.headers.userId = decoded.id; //passing data using headers if body fail to pass
       next();
     }
   });
