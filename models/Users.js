@@ -17,7 +17,7 @@ const userSchema = new Schema({
   image: {
     type: String,
     default:
-      "https://raw.githubusercontent.com/ozy-ahmad/images/master/users.png",
+      "public/usersImage/default-user-icon.jpg",
   },
   about: {
     type: String,

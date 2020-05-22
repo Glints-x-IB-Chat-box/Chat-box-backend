@@ -17,10 +17,10 @@ const upload = multer({
 router.post("/register", userController.register);
 router.post("/login", userController.authenticated);
 router.get("/get", userController.getAllData);
-router.get("/searchuser", userController.searchUsername);
 router.get("/get/:usersId", userController.getDataById);
-router.delete("/delete", userController.deleteById); //userId is retrieved from token
 router.get("/getProfile", userController.getDataById); //userId is retrieved from token
+router.get("/searchuser", userController.searchUsername);
+router.delete("/delete/:usersId", userController.deleteById); //userId can be retrieved from token
 router.put("/edit", upload.single("image"), userController.editById); //userId is retrieved from token
 
 module.exports = router;
