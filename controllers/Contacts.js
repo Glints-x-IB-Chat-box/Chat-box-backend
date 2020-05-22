@@ -44,7 +44,6 @@ module.exports = {
   },
   getContact: (req, res) => {
     UserContact.findById(req.body.userId)
-
       // Contact.find({})
       //   .populate({
       //     path: "userId",
@@ -97,6 +96,7 @@ module.exports = {
     console.log(req.params.contactId);
     UserContact.findOneAndUpdate(
       { _id: req.body.userId },
+      //$pull for deleting one contact from contact list
       { $pull: { contacts: req.params.contactId } },
       {
         upsert: true,

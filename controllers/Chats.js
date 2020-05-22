@@ -3,6 +3,7 @@ const User = require("../models/Users");
 const mongoose = require("mongoose");
 
 module.exports = {
+  //this controller for recent chat each user
   getChat: (req, res) => {
     //distinct is for unique value
     Chat.distinct("usersId", {
