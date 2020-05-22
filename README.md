@@ -9,7 +9,7 @@
 | Method | endpoint          | Description                 |
 | ------ | ----------------- | --------------------------- |
 | POST   | `/users/register` | register with new user data |
-| POST   | `/users/login`    | register with new user data |
+| POST   | `/users/login`    | login with new user data    |
 
 | Field register  |
 | --------------- |
@@ -26,14 +26,19 @@
 
 ### Users
 
-| Method | endpoint               | Description                    |
-| ------ | ---------------------- | ------------------------------ |
-| GET    | `/users/get`           | get all                        |
-| GET    | `/users/get/:id`       | get by:id                      |
-| DELETE | `/users/delete/:id`    | delete data                    |
-| PUT    | `/users/edit/:usersId` | edit users ( Fields: username, |
-|        |                        | about, image,                  |
-|        |                        | password, confirmPassword )    |
+| Method | endpoint            | Description  |
+| ------ | ------------------- | ------------ |
+| GET    | `/users/get`        | get all      |
+| GET    | `/users/get/:id`    | get by:id    |
+| GET    | `/users/searchuser` | search users |
+
+#### this endpoint for user profile
+
+| Method | endpoint                  | Description      |
+| ------ | ------------------------- | ---------------- |
+| GET    | `/usersSecure/getprofile` | get user profile |
+| DELETE | `/usersSecure/delete`     | delete data      |
+| PUT    | `/usersSecure/edit`       | edit users       |
 
 | Field users |
 | ----------- |
@@ -68,6 +73,7 @@
 
 ```javascript
 "usersId": [
+        //the id which show can be sender first or target first
       "5eb256f023285e23e9acc781",
       "5eb25c5323285e23e9acc784"
     ],

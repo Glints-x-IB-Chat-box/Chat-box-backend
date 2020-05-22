@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express();
 const http = require("http");
-const path = require("path");
 const socketio = require("socket.io");
+const path = require("path");
 const server = http.createServer(app);
 const io = socketio(server);
 const cors = require("cors");
@@ -17,7 +17,12 @@ const privateKey = process.env.PRIVATE_KEY;
 mongodConnect = process.env.DB_CONNECTION;
 mongoose.connect(
   mongodConnect,
-  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  },
   () => console.log("mongodb connected")
 );
 
@@ -53,17 +58,12 @@ app.use("/contacts", validateUser, contactsRouter);
 
 io.on("connection", (socket) => {
   console.log("a user connected");
-  socket.emit("connected", {
-    user: "You",
-    text: `connected to circle chatbox`,
-  });
-  socket.on("sendMessage", (message, callback) => {
-    // const user = getUser(socket.id);
-    // io.to(user.room).emit('message')
-    socket.emit("message", { user: "You", text: `can chat with in private` });
+  socket.on("sendMessage", (data) => {
+    io.sockets.emit("sendMessage", data);
+    // console.log(data)
+    // get data from the message being sent from the client
   });
 
-  // ${user.name}
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
