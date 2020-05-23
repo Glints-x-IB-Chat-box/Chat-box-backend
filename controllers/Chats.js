@@ -1,6 +1,7 @@
 const Chat = require("../models/Chat");
 const User = require("../models/Users");
 const mongoose = require("mongoose");
+const moment = require("moment");
 
 module.exports = {
   //this controller for recent chat each user
@@ -83,25 +84,21 @@ module.exports = {
     }
 
     let images = [];
+    let documents = [];
+    let date = moment().format("L");
     if (req.files) {
       if (req.files.images) {
         for (let i = 0; i < req.files.images.length; i++) {
-          images.push(
-            new Date().toISOString() + req.files.images[i].originalname
-          );
+          images.push(date + req.files.images[i].originalname);
         }
       }
-    }
-    let documents = [];
-    if (req.files) {
       if (req.files.documents) {
         for (let i = 0; i < req.files.documents.length; i++) {
-          documents.push(
-            new Date().toISOString() + req.files.documents[i].originalname
-          );
+          documents.push(date + req.files.documents[i].originalname);
         }
       }
     }
+
     Chat.findOneAndUpdate(
       { ...condition },
       {
