@@ -1,7 +1,6 @@
 const Chat = require("../models/Chat");
 const User = require("../models/Users");
 const mongoose = require("mongoose");
-
 module.exports = {
   //this controller for recent chat each user
   getChat: (req, res) => {
@@ -86,9 +85,7 @@ module.exports = {
     if (req.files) {
       if (req.files.images) {
         for (let i = 0; i < req.files.images.length; i++) {
-          images.push(
-            new Date().toISOString() + req.files.images[i].originalname
-          );
+          images.push(req.files.images[i].originalname);
         }
       }
     }
@@ -96,9 +93,7 @@ module.exports = {
     if (req.files) {
       if (req.files.documents) {
         for (let i = 0; i < req.files.documents.length; i++) {
-          documents.push(
-            new Date().toISOString() + req.files.documents[i].originalname
-          );
+          documents.push(req.files.documents[i].originalname);
         }
       }
     }
