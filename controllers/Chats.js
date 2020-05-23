@@ -86,7 +86,9 @@ module.exports = {
     if (req.files) {
       if (req.files.images) {
         for (let i = 0; i < req.files.images.length; i++) {
-          images.push(req.files.images[i].originalname);
+          images.push(
+            new Date().toISOString() + req.files.images[i].originalname
+          );
         }
       }
     }
@@ -94,7 +96,9 @@ module.exports = {
     if (req.files) {
       if (req.files.documents) {
         for (let i = 0; i < req.files.documents.length; i++) {
-          documents.push(req.files.documents[i].originalname);
+          documents.push(
+            new Date().toISOString() + req.files.documents[i].originalname
+          );
         }
       }
     }
