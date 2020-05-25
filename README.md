@@ -51,13 +51,14 @@
 
 ### Chats
 
-| Method | endpoint                   | Description         |
-| ------ | -------------------------- | ------------------- |
-| GET    | `/chat/getchat`            | get all             |
-| GET    | `/chat/getbyid/:chatId`    | get by Id           |
-| GET    | `/gettarget/:targetUserId` | get by targetUserId |
-| POST   | `/chat/postchat`           | post chat           |
-| DELETE | `/chat/deletechat/:id`     | delete chat         |
+| Method | endpoint                   | Description              |
+| ------ | -------------------------- | ------------------------ |
+| GET    | `/chat/getchat`            | get all list recent chat |
+| GET    | `/chat/recentchat`         | get last message         |
+| GET    | `/chat/getbyid/:chatId`    | get by Id                |
+| GET    | `/gettarget/:targetUserId` | get by targetUserId      |
+| POST   | `/chat/postchat`           | post chat                |
+| DELETE | `/chat/deletechat/:id`     | delete chat              |
 
 | Chat field   |
 | ------------ |

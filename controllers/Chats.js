@@ -32,6 +32,33 @@ module.exports = {
 
       .catch((err) => res.status(400).json(err));
   },
+  GetRecentChat: (req, res) => {
+    Chat.aggregate([
+      {
+        $addFields: {
+          lastMessage: { $arrayElemAt: ["$messages", -1] },
+        },
+      },
+      {
+        $match: {
+          usersId: { $in: [mongoose.Types.ObjectId(req.body.userId)] },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "usersId",
+          foreignField: "_id",
+          as: "usersIds",
+        },
+      },
+      {
+        $unset: ["messages", "usersIds.password", "usersIds.contacts"],
+      },
+    ]).then((response) => {
+      res.json(response);
+    });
+  },
   postChat: (req, res) => {
     /**
      * required:
