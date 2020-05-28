@@ -61,7 +61,7 @@ io.on("connection", (socket) => {
   console.log("a user connected");
   socket.on("sendMessage", (data) => {
     io.sockets.emit("sendMessage", data);
-    // console.log(data)
+    console.log(data);
     // get data from the message being sent from the client
   });
 
