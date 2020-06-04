@@ -1,8 +1,8 @@
 const Chat = require("../models/Chat");
 const User = require("../models/Users");
 const mongoose = require("mongoose");
-
 module.exports = {
+  //this controller for recent chat each user
   getChat: (req, res) => {
     //distinct is for unique value
     Chat.distinct("usersId", {
@@ -31,6 +31,33 @@ module.exports = {
       })
 
       .catch((err) => res.status(400).json(err));
+  },
+  GetRecentChat: (req, res) => {
+    Chat.aggregate([
+      {
+        $addFields: {
+          lastMessage: { $arrayElemAt: ["$messages", -1] },
+        },
+      },
+      {
+        $match: {
+          usersId: { $in: [mongoose.Types.ObjectId(req.body.userId)] },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "usersId",
+          foreignField: "_id",
+          as: "usersIds",
+        },
+      },
+      {
+        $unset: ["messages", "usersIds.password", "usersIds.contacts"],
+      },
+    ]).then((response) => {
+      res.json(response);
+    });
   },
   postChat: (req, res) => {
     /**
@@ -158,6 +185,116 @@ module.exports = {
       .populate("usersId")
       .select("-password")
       .then((result) => res.json(result))
+      .catch((err) => res.status(400).json(err));
+  },
+  getRecentChatIsContact: (req, res) => {
+    //for query in database
+    Chat.aggregate([
+      {
+        $addFields: {
+          //add new field
+          lastMessage: { $arrayElemAt: ["$messages", -1] }, //to get the last object in array
+        },
+      },
+      {
+        $match: {
+          usersId: { $in: [mongoose.Types.ObjectId(req.body.userId)] }, //to filter userId in array which match with the user that login
+        },
+      },
+      {
+        $lookup: {
+          //join other collection
+          from: "users", //collection to join
+          localField: "usersId", //field from the input document
+          foreignField: "_id", //field from the documents of the "from" collection
+          as: "usersIds", //output array field
+        },
+      },
+      {
+        $addFields: {
+          //to create new field
+          targetUserId: {
+            $filter: {
+              //to filter the item which match to the createria bellow
+              input: "$usersIds", //data source which is an array
+              as: "userId",
+              cond: {
+                $ne: ["$$userId._id", mongoose.Types.ObjectId(req.body.userId)], //find the user which is not the user that login
+              },
+            },
+          },
+        },
+      },
+      {
+        $unwind: "$targetUserId", // to mutate the array to be an object
+      },
+      {
+        $addFields: {
+          senderUserId: {
+            $filter: {
+              input: "$usersIds",
+              as: "userId",
+              cond: {
+                $eq: ["$$userId._id", mongoose.Types.ObjectId(req.body.userId)], //eq = equal, if equal the data will be true
+              },
+            },
+          },
+        },
+      },
+      {
+        $unwind: "$senderUserId", // to mutate the array to be an object
+      },
+      {
+        $addFields: {
+          contacts: "$senderUserId.contacts", //to get the contacts of the user that login
+        },
+      },
+      {
+        $addFields: {
+          isContact: {
+            $cond: {
+              if: {
+                $eq: [
+                  {
+                    $size: {
+                      //to count and returns the total number of items in an array.
+                      $filter: {
+                        input: "$contacts",
+                        as: "contact",
+                        cond: {
+                          $eq: [
+                            { $toObjectId: "$$contact" }, //to mutate the data to be an ObjectId
+                            "$targetUserId._id", //to find the contact which equal with the targetUserId
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  1, // if the contact match with the condition will be true
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+        },
+      },
+      {
+        $sort: { isContact: -1, "lastMessage.status": -1 }, //to sort the data which is the contact of the user will be at the top and sort last message status which is unread will be aat the top
+      },
+      {
+        $unset: [
+          // to hide the data
+          "contacts",
+          "usersIds",
+          "senderUserId",
+          "targetUserId.password",
+          "targetUserId.contacts",
+          "messages",
+        ],
+      },
+    ])
+      .then((response) => res.json(response))
       .catch((err) => res.status(400).json(err));
   },
 };

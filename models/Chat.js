@@ -8,17 +8,14 @@ const messageSchema = new Schema(
       required: true,
       ref: "user",
     },
-    message: String,
+    message: { type: String, required: true },
     status: {
       type: String,
       enum: [, "unread", "read"],
       default: "unread",
     },
     images: { type: Array, default: [] },
-    // time: {
-    //   type: Number,
-    //   default: new Date().getTime(),
-    // },
+
     documents: { type: Array, default: [] },
   },
   { timestamps: true }

@@ -50,6 +50,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/public/chatImage", express.static("public"));
 app.use("/public", express.static("public"));
+app.use("/public/uploads", express.static("public"));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/usersSecure", validateUser, usersRouter);
@@ -60,7 +61,7 @@ io.on("connection", (socket) => {
   console.log("a user connected");
   socket.on("sendMessage", (data) => {
     io.sockets.emit("sendMessage", data);
-    // console.log(data)
+    console.log(data);
     // get data from the message being sent from the client
   });
 

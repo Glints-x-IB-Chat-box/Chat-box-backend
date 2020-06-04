@@ -4,17 +4,17 @@ const router = express.Router();
 const multer = require("multer");
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: function (req, file, cb) {
     cb(null, "./public/uploads/");
   },
-  filename: (req, file, cb) => {
-    cb(null, new Date().toISOString() + "-" + file.originalname);
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
   },
 });
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 1024 * 1024 * 5,
+    fileSize: 1024 * 1024 * 20,
   },
 });
 router.get("/getchat", ChatController.getChat);
@@ -35,4 +35,6 @@ router.post(
 router.delete("/deletechat/:chatId", ChatController.deleteChat);
 router.get("/getbyid/:chatId", ChatController.getChatById);
 router.get("/gettarget/:targetUserId", ChatController.getChatByTarget);
+router.get("/recentchat", ChatController.GetRecentChat);
+router.get("/iscontact", ChatController.getRecentChatIsContact);
 module.exports = router;
