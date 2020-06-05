@@ -8,7 +8,7 @@ module.exports = function validateRegisterInput(data) {
       username: '',
       email: '',
       phoneNumber: '',
-      userpasswordname: '',
+      password: '',
       confirmPassword: ''
     }
   };
@@ -24,11 +24,23 @@ module.exports = function validateRegisterInput(data) {
     errors.status = "error";
     errors.error = {
       ...errors.error,
-      username : "username is required"
+      username: "Username is required"
+    };
+  } else if (!Validator.isAlphanumeric(data.username)) {
+    errors.status = "error";
+    errors.error = {
+      ...errors.error,
+      username: "Username is invalid"
     };
   }
   // Email validator
   if (Validator.isEmpty(data.email)) {
+    errors.status = "error";
+    errors.error = {
+      ...errors.error,
+      email: "Email is required"
+    };
+  } else if (!Validator.isEmail(data.email)) {
     errors.status = "error";
     errors.error = {
       ...errors.error,
@@ -40,7 +52,13 @@ module.exports = function validateRegisterInput(data) {
     errors.status = "error";
     errors.error = {
       ...errors.error,
-      phoneNumber: "Phone number field is required"
+      phoneNumber: "Phone number is required"
+    };
+  } else if (!Validator.isMobilePhone(data.phoneNumber)) {
+    errors.status = "error";
+    errors.error = {
+      ...errors.error,
+      phoneNumber: "Phone number is invalid"
     };
   }
   // Password validator
@@ -71,7 +89,7 @@ module.exports = function validateRegisterInput(data) {
     errors.status = "error";
     errors.error = {
       ...errors.error,
-      confirmPassword: "Password must match"
+      confirmPassword: "Passwords must match"
     };
   }
   return {
