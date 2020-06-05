@@ -32,6 +32,12 @@ module.exports = function validateRegisterInput(data) {
       ...errors.error,
       username: "Username is invalid"
     };
+  } else if (!Validator.isLowercase(data.username)) {
+    errors.status = "error";
+    errors.error = {
+      ...errors.error,
+      username: "Username must be lowercase only"
+    };
   }
   // Email validator
   if (Validator.isEmpty(data.email)) {
