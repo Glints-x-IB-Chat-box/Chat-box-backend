@@ -11,8 +11,8 @@ const messageSchema = new Schema(
     message: { type: String, required: true },
     status: {
       type: String,
-      enum: [, "unread", "read"],
-      default: "unread",
+      enum: [, "deliver", "read"],
+      default: "deliver",
     },
     images: { type: Array, default: [] },
 

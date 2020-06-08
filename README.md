@@ -32,13 +32,14 @@
 | GET    | `/users/get/:id`    | get by:id    |
 | GET    | `/users/searchuser` | search users |
 
-#### this endpoint for user profile
+#### this endpoint for user profile and block another users
 
 | Method | endpoint                  | Description      |
 | ------ | ------------------------- | ---------------- |
 | GET    | `/usersSecure/getprofile` | get user profile |
 | DELETE | `/usersSecure/delete`     | delete data      |
 | PUT    | `/usersSecure/edit`       | edit users       |
+| POST   | `/usersSecure/blocked`    | blocked user     |
 
 | Field users |
 | ----------- |
