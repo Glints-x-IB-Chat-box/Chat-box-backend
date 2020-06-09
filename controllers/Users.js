@@ -139,6 +139,7 @@ module.exports = {
             username: req.body.username || result.username,
             about: req.body.about || result.about,
             image: (req.file && req.file.path) || result.image,
+            status: req.body.status || result.status,
           },
           {
             new: true,
