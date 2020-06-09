@@ -24,6 +24,11 @@ const userSchema = new Schema({
     type: String,
     default: "Hi, I'm using Circle Messenger",
   },
+  status: {
+    type: String,
+    enum: ["online", "offline"],
+    default: "offline"
+  },
   phoneNumber: {
     type: String,
     required: true,
