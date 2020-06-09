@@ -1,6 +1,51 @@
 const Chat = require("../models/Chat");
 const User = require("../models/Users");
 const mongoose = require("mongoose");
+
+const checkIsCanChat = (userId, userId2) => {
+  //this function for checking the contact is blocked or not
+  return new Promise((resolve, reject) => {
+    User.find({
+      $or: [
+        // selects the documents that satisfy at least one of the <expressions>
+        {
+          $and: [
+            //selects the documents that satisfy all the expressions in the array.
+            {
+              _id: mongoose.Types.ObjectId(userId),
+            },
+            {
+              blocked: {
+                $nin: [userId2],
+              },
+            },
+          ],
+        },
+        {
+          $and: [
+            ////selects the documents that satisfy all the expressions in the array.
+            {
+              _id: mongoose.Types.ObjectId(userId2),
+            },
+            {
+              blocked: {
+                $nin: [userId],
+              },
+            },
+          ],
+        },
+      ],
+    })
+      .then((response) => {
+        resolve(response.length == 2);
+        //resolve(response);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
 module.exports = {
   //this controller for recent chat each user
   getChat: (req, res) => {
@@ -59,7 +104,115 @@ module.exports = {
       res.json(response);
     });
   },
-  postChat: (req, res) => {
+  postChat: async (req, res) => {
+    /**
+     * required:
+     * req.body.senderUserId
+     *
+     * optional:
+     * req.params.chatId
+     * req.body.groupId OR req.body.targetUserId
+     * req.body.message
+     * req.body.image
+     */
+    try {
+      const isCanChat = await checkIsCanChat(
+        req.body.senderUserId,
+        req.body.targetUserId
+      );
+      if (isCanChat) {
+        var req = req; //send req value to global
+        let condition;
+        let update;
+        if (req.body.groupId) {
+          condition = {
+            groupId: req.body.groupId, //this used if chat group needs to be update/insert
+          };
+          update = {
+            groupId: req.body.groupId,
+          };
+        }
+        if (req.body.targetUserId) {
+          condition = {
+            ...condition,
+
+            usersId: {
+              // The $all operator selects the documents where the value of a field is an array that contains all the specified elements.
+              $all: [
+                {
+                  //$elemMatch = find the element match with the data
+                  $elemMatch: {
+                    $eq: mongoose.Types.ObjectId(req.body.senderUserId),
+                  },
+                },
+                {
+                  $elemMatch: {
+                    $eq: mongoose.Types.ObjectId(req.body.targetUserId),
+                  },
+                },
+              ],
+            }, //this used if private chat needs to be update/insert
+          };
+
+          update = {
+            ...update,
+            usersId: [req.body.senderUserId, req.body.targetUserId],
+          };
+        }
+
+        let images = [];
+        if (req.files) {
+          if (req.files.images) {
+            for (let i = 0; i < req.files.images.length; i++) {
+              images.push(req.files.images[i].originalname);
+            }
+          }
+        }
+        let documents = [];
+        if (req.files) {
+          if (req.files.documents) {
+            for (let i = 0; i < req.files.documents.length; i++) {
+              documents.push(req.files.documents[i].originalname);
+            }
+          }
+        }
+        Chat.findOneAndUpdate(
+          { ...condition },
+          {
+            $push: {
+              //push message to chat
+              messages: {
+                senderUserId: req.body.senderUserId,
+                message: req.body.message,
+                images: images,
+                documents: documents,
+              },
+            },
+            // set is update base on obeject of "update" variable
+            $set: {
+              ...update,
+            },
+          },
+          {
+            upsert: true, //if chat not exist, then create, other than that insert
+            new: true, //result return is updated value
+          }
+        )
+          .then((response) => {
+            console.log(req.file && req.file.path), res.json(response);
+          })
+          .catch((err) => res.status(400).json(err));
+      } else {
+        res.status(400).json({
+          message:
+            "you are blocked this user or you have been blocked by this user",
+        });
+      }
+    } catch (err) {
+      res.status(400).json(err);
+    }
+  },
+  postChat_backup: (req, res) => {
     /**
      * required:
      * req.body.senderUserId
@@ -84,6 +237,7 @@ module.exports = {
     if (req.body.targetUserId) {
       condition = {
         ...condition,
+
         usersId: {
           // The $all operator selects the documents where the value of a field is an array that contains all the specified elements.
           $all: [

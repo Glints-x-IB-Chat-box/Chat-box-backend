@@ -10,7 +10,20 @@ module.exports = {
           { _id: req.body.userId },
           { _id: { $ne: req.body.userContactId } },
           //validate user can't add same contact
-          { contacts: { $nin: [req.body.userContactId] } },
+          {
+            $nor: [
+              {
+                contacts: {
+                  $nin: [req.body.userContactId],
+                },
+              },
+              {
+                blocked: {
+                  $nin: [req.body.userBlockedId],
+                },
+              },
+            ],
+          },
         ],
       },
       { $push: { contacts: req.body.userContactId } },
