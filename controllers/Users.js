@@ -149,4 +149,41 @@ module.exports = {
       })
       .catch((err) => res.json(err));
   },
+  blockedUser: (req, res) => {
+    User.findOneAndUpdate(
+      {
+        //$and all requirement must be true
+        $and: [
+          //validate user can't add himself
+          { _id: req.body.userId },
+          { _id: { $ne: req.body.userBlockedId } },
+          //validate user can't add same contact
+          { blocked: { $nin: [req.body.userBlockedId] } },
+        ],
+      },
+      { $push: { blocked: req.body.userBlockedId } },
+      {
+        upsert: true,
+        new: true,
+      }
+    )
+      .then((result) => {
+        User.findById(
+          { _id: req.body.userBlockedId },
+          {
+            _id: 1,
+            username: 1,
+            image: 1,
+            email: 1,
+            phoneNumber: 1,
+            about: 1,
+          }
+        ).then((result) => {
+          res.json(result);
+        });
+      })
+      .catch((err) => {
+        res.status(500).json(err);
+      });
+  },
 };

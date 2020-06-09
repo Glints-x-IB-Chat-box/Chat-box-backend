@@ -81,7 +81,7 @@ function validateUser(req, res, next) {
     }
   });
 }
-port = 8443;
+port = 8000;
 server.listen(`${port}`, () => console.log(`server is running on ${port}`));
 
 module.exports = app;
