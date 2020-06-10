@@ -11,7 +11,7 @@ module.exports = {
           { _id: { $ne: req.body.userContactId } },
           //validate user can't add same contact
           {
-            $nor: [
+            $and: [
               {
                 contacts: {
                   $nin: [req.body.userContactId],
@@ -72,7 +72,7 @@ module.exports = {
             email: 1,
             phoneNumber: 1,
             about: 1,
-            status: 1
+            status: 1,
           }
         ).then((result) => {
           res.json(result);
