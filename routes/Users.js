@@ -23,4 +23,5 @@ router.get("/searchuser", userController.searchUsername);
 router.delete("/delete/:usersId", userController.deleteById); //userId can be retrieved from token
 router.put("/edit", upload.single("image"), userController.editById); //userId is retrieved from token
 router.post("/blocked", userController.blockedUser);
+router.get("/getBlocked", userController.getBlocked);
 module.exports = router;

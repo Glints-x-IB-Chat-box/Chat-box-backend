@@ -39,6 +39,7 @@
 | GET    | `/usersSecure/getprofile` | get user profile |
 | DELETE | `/usersSecure/delete`     | delete data      |
 | PUT    | `/usersSecure/edit`       | edit users       |
+| GET    | `/usersSecure/getBlocked` | get blocked data |
 | POST   | `/usersSecure/blocked`    | blocked user     |
 
 | Field users |

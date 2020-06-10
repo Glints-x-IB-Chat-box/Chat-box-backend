@@ -187,4 +187,27 @@ module.exports = {
         res.status(500).json(err);
       });
   },
+  getBlocked: (req, res) => {
+    User.findById(req.body.userId)
+      .then((result) => {
+        console.log(result);
+        User.find(
+          { _id: { $in: result.blocked } },
+          {
+            _id: 1,
+            username: 1,
+            image: 1,
+            email: 1,
+            phoneNumber: 1,
+            about: 1,
+            status: 1,
+          }
+        ).then((result) => {
+          res.json(result);
+        });
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
+  },
 };
