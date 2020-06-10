@@ -1,55 +1,73 @@
 const Contact = require("../models/Contacts");
 const UserContact = require("../models/Users");
-module.exports = {
-  addContact: (req, res) => {
-    UserContact.findOneAndUpdate(
-      {
-        //$and all requirement must be true
-        $and: [
-          //validate user can't add himself
-          { _id: req.body.userId },
-          { _id: { $ne: req.body.userContactId } },
-          //validate user can't add same contact
-          {
-            contacts: {
-              $nin: [req.body.userContactId],
-            },
-          },
-          {
-            blocked: {
-              $nin: [req.body.userContactId],
-            },
-          },
-        ],
-      },
-      { $push: { contacts: req.body.userContactId } },
-      {
-        upsert: true,
-        new: true,
-      }
-    )
-      // Contact.create({
-      //   userId: req.body.userId,
-      // })
+const { checkIsCanChat } = require("../controllers/Chats");
+//console.log( checkIsCanChat);
 
-      .then((result) => {
-        UserContact.findById(
-          { _id: req.body.userContactId },
+module.exports = {
+  addContact: async (req, res) => {
+    try {
+      const isCanAdd = await checkIsCanChat(
+        // or checkIscanAdd
+        req.body.userId,
+        req.body.userContactId
+      );
+      if (isCanAdd) {
+        UserContact.findOneAndUpdate(
           {
-            _id: 1,
-            username: 1,
-            image: 1,
-            email: 1,
-            phoneNumber: 1,
-            about: 1,
+            //$and all requirement must be true
+            $and: [
+              //validate user can't add himself
+              { _id: req.body.userId },
+              { _id: { $ne: req.body.userContactId } },
+              //validate user can't add same contact
+              {
+                contacts: {
+                  $nin: [req.body.userContactId],
+                },
+              },
+              {
+                blocked: {
+                  $nin: [req.body.userContactId],
+                },
+              },
+            ],
+          },
+          { $push: { contacts: req.body.userContactId } },
+          {
+            upsert: true,
+            new: true,
           }
-        ).then((result) => {
-          res.json(result);
+        )
+          // Contact.create({
+          //   userId: req.body.userId,
+          // })
+
+          .then((result) => {
+            UserContact.findById(
+              { _id: req.body.userContactId },
+              {
+                _id: 1,
+                username: 1,
+                image: 1,
+                email: 1,
+                phoneNumber: 1,
+                about: 1,
+              }
+            ).then((result) => {
+              res.json(result);
+            });
+          })
+          .catch((err) => {
+            res.status(500).json(err);
+          });
+      } else {
+        res.status(400).json({
+          message: "cant add",
         });
-      })
-      .catch((err) => {
-        res.status(500).json(err);
-      });
+      }
+    } catch (err) {
+      res.status(400).json(err);
+    }
   },
   getContact: (req, res) => {
     UserContact.findById(req.body.userId)
