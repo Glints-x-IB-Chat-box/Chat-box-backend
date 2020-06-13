@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { error, success } = require("./../utility/http-status-codes");
 const status = require("http-status-codes");
 require("dotenv").config();
+const { removeContact } = require("../controllers/Contacts");
 const validationRegister = require("../validation/register");
 const privateKey = process.env.PRIVATE_KEY;
 
@@ -180,6 +181,7 @@ module.exports = {
             about: 1,
           }
         ).then((result) => {
+          removeContact(req.body.userId, req.body.userBlockedId);
           res.json(result);
         });
       })

@@ -3,14 +3,33 @@ const UserContact = require("../models/Users");
 const { checkIsCanChat } = require("../controllers/Chats");
 //console.log( checkIsCanChat);
 
+removeContact = (userId, contactId) => {
+  return new Promise((resolve, reject) => {
+    UserContact.findOneAndUpdate(
+      { _id: userId },
+      //$pull for deleting one contact from contact list
+      { $pull: { contacts: contactId } },
+      {
+        upsert: true,
+        new: true,
+      }
+    )
+      .then((result) => resolve(result))
+      .catch((err) => reject(err));
+  });
+};
+
 module.exports = {
   addContact: async (req, res) => {
     try {
+      console.log("check is account");
+
       const isCanAdd = await checkIsCanChat(
         // or checkIscanAdd
         req.body.userId,
         req.body.userContactId
       );
+      console.log(req.body.userId, req.body.userContactId);
       if (isCanAdd) {
         UserContact.findOneAndUpdate(
           {
@@ -62,7 +81,8 @@ module.exports = {
           });
       } else {
         res.status(400).json({
-          message: "cant add",
+          message:
+            "you have blocked this user or you have been blocked by this user",
         });
       }
     } catch (err) {
@@ -122,16 +142,9 @@ module.exports = {
   deleteContactById: (req, res) => {
     // Contact.findByIdAndRemove(req.params.contactId)
     console.log(req.params.contactId);
-    UserContact.findOneAndUpdate(
-      { _id: req.body.userId },
-      //$pull for deleting one contact from contact list
-      { $pull: { contacts: req.params.contactId } },
-      {
-        upsert: true,
-        new: true,
-      }
-    )
+    removeContact(req.body.userId, req.params.contactId)
       .then((result) => res.json(result))
       .catch((err) => res.status(500).json(err));
   },
 };
+module.exports.removeContact = removeContact;
