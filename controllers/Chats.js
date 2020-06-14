@@ -338,7 +338,27 @@ module.exports = {
       // .limit(5)
       .populate("usersId")
       .select("-password")
-      .then((result) => res.json(result))
+      .then((result) => {
+        Chat.findOneAndUpdate(
+          {
+            _id: result[0]._id,
+          },
+          { $set: { "messages.$[element].status": "read" } },
+          {
+            multi: true,
+            arrayFilters: [
+              {
+                "element.status": { $eq: "deliver" },
+                "element.senderUserId": {
+                  $eq: req.params.targetUserId,
+                },
+              },
+            ],
+            upsert: true,
+          }
+        ).then((response) => console.log(response));
+        res.json(result);
+      })
       .catch((err) => res.status(400).json(err));
   },
   getRecentChatIsContact: (req, res) => {
