@@ -350,14 +350,17 @@ module.exports = {
               {
                 "element.status": { $eq: "deliver" },
                 "element.senderUserId": {
-                  $eq: req.params.targetUserId,
+                  $eq: mongoose.Types.ObjectId(req.params.targetUserId),
                 },
               },
             ],
             upsert: true,
+            new: true,
           }
-        ).then((response) => console.log(response));
-        res.json(result);
+        ).then((result) => {
+          res.json(result);
+        });
+        //res.json(result);
       })
       .catch((err) => res.status(400).json(err));
   },
